@@ -6,7 +6,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (b *Bot) SetFallbackCallbackHandler(function FallbackCallbackFunction) {
+func (b *Bot) SetSessionStartCallbackHandler(function CallbackFunction) {
+	sessionStartCallbackFunction = function
+}
+
+func (b *Bot) SetFallbackCallbackHandler(function CallbackFunction) {
 	fallbackCallbackFunction = function
 }
 

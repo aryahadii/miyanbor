@@ -7,15 +7,28 @@ import (
 )
 
 var (
-	callbacks                []callback
-	fallbackCallbackFunction FallbackCallbackFunction
+	callbacks                    []callback
+	sessionStartCallbackFunction CallbackFunction
+	fallbackCallbackFunction     CallbackFunction
 
 	usersSessionCache *cache.Cache
 )
 
 func (b *Bot) handleNewUpdate(update *telegramAPI.Update) {
 	// Get UserInfo
-	_, _, userSession := getUserInfo(update)
+	userID, chatID, userSession := getUserInfo(update)
+	if userSession == nil {
+		userSession = &UserSession{
+			chatID: chatID,
+			userID: userID,
+		}
+		usersSessionCache.Add(getUserSessionKey(userID, chatID), userSession, cache.DefaultExpiration)
+
+		if sessionStartCallbackFunction != nil {
+			sessionStartCallbackFunction(userSession, update)
+			return
+		}
+	}
 
 	// Find and call callback function
 	if update.CallbackQuery != nil {
@@ -51,13 +64,7 @@ func getUserInfo(update *telegramAPI.Update) (userID int, chatID int64, userSess
 
 	// Find userSession
 	userSessionInterface, found := usersSessionCache.Get(getUserSessionKey(userID, chatID))
-	if !found {
-		userSession = &UserSession{
-			chatID: chatID,
-			userID: userID,
-		}
-		usersSessionCache.Add(getUserSessionKey(userID, chatID), userSession, cache.DefaultExpiration)
-	} else {
+	if found {
 		userSession = userSessionInterface.(*UserSession)
 	}
 	return
