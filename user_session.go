@@ -14,3 +14,7 @@ func (us *UserSession) GetUserID() int {
 func (us *UserSession) GetChatID() int64 {
 	return us.chatID
 }
+
+func (us *UserSession) GetPayload() map[string]interface{} {
+	return us.payload
+}

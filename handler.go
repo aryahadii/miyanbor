@@ -19,8 +19,9 @@ func (b *Bot) handleNewUpdate(update *telegramAPI.Update) {
 	userID, chatID, userSession := getUserInfo(update)
 	if userSession == nil {
 		userSession = &UserSession{
-			chatID: chatID,
-			userID: userID,
+			chatID:  chatID,
+			userID:  userID,
+			payload: make(map[string]interface{}),
 		}
 		usersSessionCache.Add(getUserSessionKey(userID, chatID), userSession, cache.DefaultExpiration)
 
