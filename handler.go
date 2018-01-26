@@ -8,6 +8,7 @@ import (
 
 var (
 	callbacks                    []callback
+	commandsCallbacks            []callback
 	sessionStartCallbackFunction CallbackFunction
 	fallbackCallbackFunction     CallbackFunction
 
@@ -40,7 +41,16 @@ func (b *Bot) handleNewUpdate(update *telegramAPI.Update) {
 			}
 		}
 	} else if update.Message != nil {
-		userSession.messageCallback(userSession, update.Message.Text)
+		if update.Message.IsCommand() {
+			for _, callback := range commandsCallbacks {
+				if matches := callback.Pattern.FindStringSubmatch(update.Message.Command()); matches != nil {
+					callback.Function(userSession, matches)
+					break
+				}
+			}
+		} else {
+			userSession.messageCallback(userSession, update.Message.Text)
+		}
 		return
 	} else {
 		logrus.Errorf("Unknown update")

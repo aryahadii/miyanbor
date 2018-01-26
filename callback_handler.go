@@ -28,3 +28,18 @@ func (b *Bot) AddCallbackHandler(callbackQueryPattern string, function CallbackF
 	})
 	return nil
 }
+
+func (b *Bot) AddCommandHandler(commandPattern string, function CallbackFunction) error {
+	// Compile pattern
+	regexPattern, err := regexp.Compile(commandPattern)
+	if err != nil {
+		return errors.Wrap(err, "can't compile pattern")
+	}
+
+	// Add to callbacks list
+	commandsCallbacks = append(callbacks, callback{
+		Pattern:  regexPattern,
+		Function: function,
+	})
+	return nil
+}
