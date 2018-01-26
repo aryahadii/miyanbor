@@ -28,7 +28,6 @@ func (b *Bot) handleNewUpdate(update *telegramAPI.Update) {
 
 		if sessionStartCallbackFunction != nil {
 			sessionStartCallbackFunction(userSession, update)
-			return
 		}
 	}
 
