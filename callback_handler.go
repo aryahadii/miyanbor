@@ -37,7 +37,7 @@ func (b *Bot) AddCommandHandler(commandPattern string, function CallbackFunction
 	}
 
 	// Add to callbacks list
-	commandsCallbacks = append(callbacks, callback{
+	commandsCallbacks = append(commandsCallbacks, callback{
 		Pattern:  regexPattern,
 		Function: function,
 	})
