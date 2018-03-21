@@ -57,6 +57,7 @@ func (b *Bot) handleNewUpdate(update *telegramAPI.Update) {
 		} else {
 			if userSession.messageCallback != nil {
 				userSession.messageCallback(userSession, update.Message)
+				updateHandled = true
 			} else {
 				for _, callback := range messagesCallbacks {
 					if matches := callback.Pattern.FindStringSubmatch(update.Message.Text); matches != nil {
