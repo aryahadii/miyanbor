@@ -22,7 +22,7 @@ func (b *Bot) handleNewUpdate(update *telegramAPI.Update) {
 	// Try to get user session from cache
 	userSession, err := getUserSession(update)
 	if err != nil {
-		logrus.WithError(err).Errorf("can't get user session")
+		logrus.WithField("update", *update).WithError(err).Errorf("can't get user session")
 		return
 	}
 
